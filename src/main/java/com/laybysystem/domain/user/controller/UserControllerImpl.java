@@ -22,11 +22,9 @@ import java.sql.Date;
 public class UserControllerImpl implements UserController{
     private final UserService userService;
     private final EmailAuthenticationService emailAuthenticationService;
-
     private String authenticationCode = "";
     private boolean authStatus = false;
 
-    @ResponseBody
     @PostMapping("/email-auth")
     public ResponseEntity<String> emailAuth(@RequestParam String requestEmail) throws MessagingException, UnsupportedEncodingException {
         String authCode = emailAuthenticationService.sendEmail(requestEmail);
@@ -37,7 +35,6 @@ public class UserControllerImpl implements UserController{
         return ResponseEntity.ok(authCode);
     }
 
-    @ResponseBody
     @PostMapping("/email-auth-checking")
     public ResponseEntity<String> emailAuthChecking(@RequestParam String inputAuthenticationCode){
         if(!inputAuthenticationCode.equals(authenticationCode)){
@@ -45,13 +42,13 @@ public class UserControllerImpl implements UserController{
         } else {
             authStatus = true;
             authenticationCode="";
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("인증이 완료되었습니다.");
+            return ResponseEntity.ok().body("인증이 완료되었습니다.");
         }
     }
 
     //FIN = user001
     @PostMapping()
-    public ResponseEntity<String> createAccount(@RequestBody UserDTO user) {
+    public ResponseEntity<String> createAccount(@RequestBody UserDTO user) {//*필수 : userName, userBirth, userId, userPw (관리자일 경우 userType = 0)
         if(authenticationCode==null || !authStatus){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("이메일 인증을 완료하지 않았습니다.");
         } else {
@@ -60,19 +57,21 @@ public class UserControllerImpl implements UserController{
             if(!complete){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("회원가입에 실패하였습니다. 다시 시도해주세요.");
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("회원가입이 완료되었습니다. 로그인해주세요.");
+                return ResponseEntity.ok().body("회원가입이 완료되었습니다. 로그인해주세요.");
             }
         }
     }
 
     //FIN = user002
     @GetMapping("/login")
-    public ResponseEntity<String> logIn(@RequestBody UserDTO user) {
+    public ResponseEntity<String> logIn(@RequestBody UserDTO user) {//userId, userPw
+        //우선확인을 위해 boolean타입으로 처리
+        //UserDTO로 받아와서 JWT처리
         boolean login = userService.selectUserBylogin(user);
         if(!login){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("아이디 또는 비밀번호가 일치하지않습니다.");
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("로그인 되었습니다.");
+            return ResponseEntity.ok().body("로그인 되었습니다.");
         }
     }
 
@@ -90,25 +89,41 @@ public class UserControllerImpl implements UserController{
 
     //FIN = user004
     @PatchMapping("/find-pw")
-    public ResponseEntity<UserDTO> findPw() {
-        return null;
+    public ResponseEntity<String> findPw(@RequestBody UserDTO user) {//userId, userName
+        boolean complete  = userService.changePasswordByUser(user);
+        if(complete){
+            return ResponseEntity.ok().body("비밀번호 변경이 완료되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
+        }
     }
 
     //FIN = user005
     @PutMapping("/set-img")
     public ResponseEntity<UserDTO> putUserImg() {
+        //이미지는 뭘로 저장할지 고민좀 해봄
         return null;
     }
 
     //FIN = user006
     @PutMapping("/set-comment")
-    public ResponseEntity<UserDTO> putUserComment() {
-        return null;
+    public ResponseEntity<String> putUserComment(@RequestBody UserDTO user) {//userId, userPw,userComment
+        boolean complete  = userService.setUserComment(user);
+        if(complete){
+            return ResponseEntity.ok().body("코멘트 설정이 완료되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("코멘트설정에 실패하였습니다. 다시 시도해주세요.");
+        }
     }
 
     //FIN = user007
     @DeleteMapping()
-    public ResponseEntity<UserDTO> deleteAccount() {
-        return null;
+    public ResponseEntity<String> deleteAccount(@RequestBody UserDTO user) {
+        boolean complete = userService.deleteUserByUser(user);
+        if(complete){
+            return ResponseEntity.ok().body("계정 삭제가 완료되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("계정삭제에 실패하였습니다. 다시 시도해주세요.");
+        }
     }
 }

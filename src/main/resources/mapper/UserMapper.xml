@@ -15,4 +15,13 @@
         FROM USER
         WHERE userId = #{userId}
     </select>
+    <update id="updatePasswordByUser" parameterType="com.laybysystem.domain.user.dto.UserDTO">
+        UPDATE USER SET userPw = #{userPw} WHERE userName = #{userName} AND userId = #{userId}
+    </update>
+    <update id="updateCommentByUser" parameterType="com.laybysystem.domain.user.dto.UserDTO">
+        UPDATE USER SET userComment  = #{userComment} WHERE userId = #{userId}
+    </update>
+    <delete id="deleteUserByUser" parameterType="com.laybysystem.domain.user.dto.UserDTO">
+        DELETE FROM USER WHERE userId = #{userId}
+    </delete>
 </mapper>

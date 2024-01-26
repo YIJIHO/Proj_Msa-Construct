@@ -8,4 +8,7 @@ public interface UserService {
     String selectUserIdByUser(String userName,Date userBirth);
     Boolean createUser(UserDTO user);
     Boolean selectUserBylogin(UserDTO user);
+    Boolean changePasswordByUser(UserDTO user);
+    Boolean setUserComment(UserDTO user);
+    Boolean deleteUserByUser(UserDTO user);
 }

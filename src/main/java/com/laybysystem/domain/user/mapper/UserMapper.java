@@ -8,4 +8,7 @@ public interface UserMapper {
     String selectUserIdByUser(UserDTO user);
     int insertUser(UserDTO user);
     UserDTO selectUserBylogin(UserDTO user);
+    int updatePasswordByUser(UserDTO user);
+    int updateCommentByUser(UserDTO user);
+    int deleteUserByUser(UserDTO user);
 }
