@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laybysystem.domain.user.mapper.UserMapper">
+    <select id="selectUserIdByUser" parameterType="com.laybysystem.domain.user.dto.UserDTO" resultType="String">
+        SELECT userId
+        FROM USER
+        WHERE userName = #{userName} AND userBirth = #{userBirth}
+    </select>
+    <insert id="insertUser" parameterType="com.laybysystem.domain.user.dto.UserDTO">
+        INSERT INTO USER (userName, userBirth, userId, userPw, userImg, userComment, userType)
+        VALUES (#{userName}, #{userBirth}, #{userId}, #{userPw}, #{userImg}, #{userComment}, #{userType})
+    </insert>
+    <select id="selectUserBylogin" parameterType="com.laybysystem.domain.user.dto.UserDTO" resultType="com.laybysystem.domain.user.dto.UserDTO">
+        SELECT *
+        FROM USER
+        WHERE userId = #{userId}
+    </select>
+</mapper>
