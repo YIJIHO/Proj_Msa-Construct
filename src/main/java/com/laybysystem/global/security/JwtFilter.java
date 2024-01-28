@@ -14,7 +14,7 @@ import java.io.IOException;
 
 
 public class JwtFilter extends BasicAuthenticationFilter {
-    public static final String USERSEQEUNCE_HEADER = "userSeq";
+    public static final String AUTH_HEADER = "user";
 
     private final JwtProvider jwtProvider;
 
@@ -33,25 +33,24 @@ public class JwtFilter extends BasicAuthenticationFilter {
             throws IOException, ServletException {
         String jwt = resolveToken(request);
         String requestURI = request.getRequestURI();
-//        if(requestURI.equals("/error")){
-//            log.error("JWT ERROR");
-//        }
-        // 토큰 유효성 검증 후 정상이면 SecurityContext에 저장
-        //else
-            if(StringUtils.hasText(jwt) && jwtProvider.validateToken(jwt)){
+        if(requestURI.equals("/error")){
+            System.out.println("JWT ERROR");
+        }
+         //토큰 유효성 검증 후 정상이면 SecurityContext에 저장
+        else if(StringUtils.hasText(jwt) && jwtProvider.validateToken(jwt)){
             Authentication authentication = jwtProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-//        else {
-//            log.debug("Valid JWT Not found " + requestURI );
-//        }
+        else {
+            System.out.println("Valid JWT Not found " + requestURI);
+        }
 
         // 생성한 필터 실행
         chain.doFilter(request,response);
     }
 
     private String resolveToken(HttpServletRequest request){
-        String bearerToken = request.getHeader(USERSEQEUNCE_HEADER);
+        String bearerToken = request.getHeader(AUTH_HEADER);
 
         if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")){
             return bearerToken.replace("Bearer ", "");

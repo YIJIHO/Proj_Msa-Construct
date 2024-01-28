@@ -7,8 +7,10 @@ import org.apache.ibatis.annotations.Mapper;
 public interface UserMapper {
     String selectUserIdByUser(UserDTO user);
     int insertUser(UserDTO user);
+    int selectAuthcodeByUser(UserDTO userr);
     UserDTO selectUserBylogin(UserDTO user);
     int updatePasswordByUser(UserDTO user);
     int updateCommentByUser(UserDTO user);
     int deleteUserByUser(UserDTO user);
+    int updateUser(UserDTO user);
 }

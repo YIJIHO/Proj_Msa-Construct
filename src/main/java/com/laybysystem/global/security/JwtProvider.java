@@ -1,109 +1,126 @@
 package com.laybysystem.global.security;
 
-import java.util.*;
-
-import io.jsonwebtoken.SignatureAlgorithm;
-import jakarta.servlet.http.HttpServletRequest;
+import com.laybysystem.domain.user.dto.UserDTO;
+import io.jsonwebtoken.*;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
-import io.jsonwebtoken.Jwts;
-import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
+import java.util.*;
+import java.security.Key;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static io.jsonwebtoken.security.Keys.secretKeyFor;
 
 @Component
-public class JwtProvider {
+public class JwtProvider implements InitializingBean {
+    //private static final String AUTHORITIES_KEY = "user";
+    private final String secret;
+    private final long tokenValidityInMilliseconds;
+    private Key key;
 
-    private final String SECRET_KEY;
-    private final long EXPIRE_TIME;
-
-    // 생성자 메소드
-    public JwtProvider(@Value("${jwt.token.secret-key}") String secretKey, @Value("${jwt.token.expire-time}") long expireTime) {
-        this.SECRET_KEY = secretKey;
-        this.EXPIRE_TIME = expireTime;
+    public JwtProvider(
+            @Value("${jwt.token.secret-key}") String secret,
+            @Value("${jwt.token.expire-time}") long tokenValidityInMilliseconds
+    ){
+        this.secret = secret;
+        this.tokenValidityInMilliseconds = tokenValidityInMilliseconds;
     }
 
-    /**
-     * Authentication 기반 토큰 생성 메소드.
-     * {@link #generateToken(String, Collection)}
-     * @param authentication
-     * @return JWT(String)
-     */
-    public String generateToken(Authentication authentication) {
-        return generateToken(authentication.getName(), authentication.getAuthorities());
+    @Override
+    public void afterPropertiesSet() {
+        this.key = secretKeyFor(SignatureAlgorithm.HS512);
     }
 
-    /**
-     * Username 및 Authorities 기반 토큰 생성 메소드.
-     * @param username
-     * @param authorities
-     * @return JWT(String)
-     */
-    public String generateToken(String username, Collection<? extends GrantedAuthority> authorities) {
+    public String createToken(UserDTO user){
+        long now = (new Date()).getTime();
+        Date validity = new Date(now + this.tokenValidityInMilliseconds);
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userEmail",user.getUserEmail());
+        claims.put("userSeq",user.getUserSeq());
+        claims.put("tokenValid",true);
+
         return Jwts.builder()
-                .setSubject(username)
-                .claim("role", authorities.stream().findFirst().get().toString())
-                .setExpiration(getExpireDate())
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .addClaims(claims)
+                .signWith(key)
+                .setExpiration(validity)
                 .compact();
     }
+    public String destroyToken(String token){
+            if(getTokenInfo(token)){
+                long now = (new Date()).getTime();
+                Date validity = new Date(now);
 
-    /**
-     * 토큰으로부터 받은 정보를 기반으로 Authentication 객체를 반환하는 메소드.
-     * @param accessToken
-     * @return Authentication
-     */
-    public Authentication getAuthentication(String accessToken) {
-        //return new UsernamePasswordAuthenticationToken(getUsername(accessToken), "", createAuthorityList(getUserSeq(accessToken)));
-        return new UsernamePasswordAuthenticationToken("", createAuthorityList(getUserSeq(accessToken)));
+                Map<String, Object> claims = new HashMap<>();
+
+                return Jwts.builder()
+                        .addClaims(claims)
+                        .signWith(key)
+                        .setExpiration(validity)
+                        .compact();
+            } else {
+                return "유효하지않습니다.";
+            }
+
     }
-
-    /**
-     * 사용자가 보낸 요청 헤더의 'userSeq' 필드에서 토큰을 추출하는 메소드.
-     * @param request
-     * @return token(String)
-     */
-    public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("userSeq");
-    }
-
-    public boolean validateToken(String accessToken) {
-        if (accessToken == null) {
-            return false;
-        }
-
-        try {
-            return Jwts.parser()
-                    .setSigningKey(SECRET_KEY)
-                    .parseClaimsJws(accessToken)
-                    .getBody()
-                    .getExpiration()
-                    .after(new Date());
-        }
-        catch (Exception e) {
-            return false;
+    public UserDTO getUserInfo(String token) {
+        if(getTokenInfo(token)){
+            token = token.replace("Bearer ","");
+            Claims claims = Jwts.parser()
+                    .setSigningKey(key)
+                    .parseClaimsJws(token)
+                    .getBody();
+            UserDTO user = new UserDTO();
+            user.setUserEmail(claims.get("userEmail").toString());
+            user.setUserSeq(Integer.parseInt(claims.get("userSeq").toString()));
+            return user;
+        } else {
+            return null;
         }
     }
-
-//    private String getUsername(String accessToken) {
-//        return Jwts.parser()
-//                .setSigningKey(SECRET_KEY)
-//                .parseClaimsJws(accessToken)
-//                .getBody()
-//                .getSubject();
-//    }
-
-    private String getUserSeq(String accessToken) {
-        return (String) Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(accessToken)
-                .getBody()
-                .get("userSeq", String.class);
-
+    public Boolean getTokenInfo(String token) {
+        token = token.replace("Bearer ","");
+        Claims claims = Jwts.parser()
+                .setSigningKey(key)
+                .parseClaimsJws(token)
+                .getBody();
+        boolean valid = claims.get("tokenValid",Boolean.class);
+        return valid;
     }
+    public Authentication getAuthentication(String token){
+        Claims claims = Jwts
+                .parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
 
-    private Date getExpireDate() {
-        Date now = new Date();
-        return new Date(now.getTime() + EXPIRE_TIME);
+        Collection<? extends GrantedAuthority> authorities =
+                authorityOf(claims.get("userSeq", String.class));
+
+        User principal = new User(claims.getSubject(), "", authorities);
+        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+    }
+    public List<GrantedAuthority> authorityOf(String userSeq) {
+        if (userSeq == null) return Collections.emptyList();
+        return Stream.of(new SimpleGrantedAuthority(userSeq)).collect(Collectors.toList());
+    }
+    public boolean validateToken(String token){//만료 체크
+        try{
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            return true;
+        }
+        catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            System.out.println("Invalid JWT Signature");
+        }
+        catch (ExpiredJwtException e) { System.out.println("JWT expired"); }
+        catch (IllegalArgumentException e) { System.out.println("Illegal JWT");}
+        return false;
     }
 }
