@@ -19,7 +19,6 @@ import static io.jsonwebtoken.security.Keys.secretKeyFor;
 
 @Component
 public class JwtProvider implements InitializingBean {
-    //private static final String AUTHORITIES_KEY = "user";
     private final String secret;
     private final long tokenValidityInMilliseconds;
     private Key key;
@@ -111,7 +110,7 @@ public class JwtProvider implements InitializingBean {
         if (userSeq == null) return Collections.emptyList();
         return Stream.of(new SimpleGrantedAuthority(userSeq)).collect(Collectors.toList());
     }
-    public boolean validateToken(String token){//만료 체크
+    public boolean validateToken(String token){
         try{
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
