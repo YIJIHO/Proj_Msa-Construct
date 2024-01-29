@@ -13,11 +13,6 @@
         <result property="userType" column="user_type"/>
         <result property="userStatus" column="user_status"/>
     </resultMap>
-    <select id="selectUserIdByUser" parameterType="com.laybysystem.domain.user.dto.UserDTO" resultType="String">
-        SELECT user_email
-        FROM USER
-        WHERE user_name = #{userName} AND user_birth = #{userBirth}
-    </select>
     <insert id="insertUser" parameterType="com.laybysystem.domain.user.dto.UserDTO">
         {call put_auth_code( #{userEmail, mode=IN, jdbcType=VARCHAR}, #{userAuthcode, mode=IN, jdbcType=VARCHAR}) }
     </insert>
@@ -38,8 +33,16 @@
         FROM USER
         WHERE user_email = #{userEmail}
     </select>
+    <select id="selectUserIdByUser" parameterType="com.laybysystem.domain.user.dto.UserDTO" resultType="String">
+        SELECT user_email
+        FROM USER
+        WHERE user_name = #{userName} AND user_birth = #{userBirth}
+    </select>
     <update id="updatePasswordByUser" parameterType="com.laybysystem.domain.user.dto.UserDTO">
         UPDATE USER SET user_pw = #{userPw} WHERE user_name = #{userName} AND user_email = #{userEmail}
+    </update>
+    <update id="updateImageByUser" parameterType="com.laybysystem.domain.user.dto.UserDTO">
+        UPDATE USER SET user_img  = #{userImg} WHERE user_seq = #{userSeq}
     </update>
     <update id="updateCommentByUser" parameterType="com.laybysystem.domain.user.dto.UserDTO">
         UPDATE USER SET userComment  = #{userComment} WHERE user_email = #{userEmail}

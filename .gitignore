@@ -9,7 +9,7 @@ application.properties
 docker-compose.yml
 settings.gradle
 /docker
-
+.json
 ### STS ###
 .apt_generated
 .classpath
