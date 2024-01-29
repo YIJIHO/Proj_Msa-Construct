@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laybysystem.domain.follow.mapper.FollowMapper">
+    <resultMap id="FollowDTO" type="com.laybysystem.domain.follow.dto.FollowDTO">
+        <id property="followSeq" column="follow_seq"/>
+        <result property="followerUserSeq" column="follower_userSeq"/>
+        <result property="followingUserSeq" column="following_userSeq"/>
+    </resultMap>
+    <insert id="insertFollowship" parameterType="com.laybysystem.domain.follow.dto.FollowDTO">
+        INSERT INTO FOLLOW (follower_userSeq, following_userSeq) VALUES (#{followerUserSeq}, #{followingUserSeq})
+    </insert>
+    <select id="selectFollowshipByUserSeq" parameterType="com.laybysystem.domain.follow.dto.FollowDTO" resultMap="FollowDTO">
+        SELECT follower_userSeq, following_userSeq FROM FOLLOW WHERE follower_userSeq = #{followerUserSeq}
+    </select>
+    <delete id="deleteFollowship" parameterType="com.laybysystem.domain.follow.dto.FollowDTO">
+        DELETE FROM FOLLOW WHERE follower_userSeq = #{followerUserSeq} AND following_userSeq = #{followingUserSeq}
+    </delete>
+
+</mapper>
