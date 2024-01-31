@@ -1,10 +1,7 @@
 package com.laybysystem.domain.like.service;
 
-
-import com.laybysystem.domain.comment.dto.CommentDTO;
 import com.laybysystem.domain.like.dto.LikeDTO;
 import com.laybysystem.domain.like.mapper.LikeMapper;
-import com.laybysystem.domain.post.dto.PostDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,52 +9,38 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LikeServiceImpl implements LikeService {
     public final LikeMapper likemapper;
-    public Boolean createPostLikeSet(int likeCreatorSeq, PostDTO post){
-        LikeDTO like = new LikeDTO();
-        like.setLikeCreatorSeq(likeCreatorSeq);
-        like.setLikeType(1);
-        like.setContentSeq(post.getPostSeq());
-        like.setChangeType(1);
-        if(likemapper.insertLike(like)){
-            return true;
-        } else {
-            return false;
+
+    @Override
+    public Boolean commonChangeLikeSet(int likeCreatorSeq,int contentType,int contentSeq,int contentProvider,int changeType){
+        boolean returnValue = false;
+        //1: 생성타입, 2: 삭제타입
+        switch (changeType){
+            case 1:
+                LikeDTO createLike = new LikeDTO();
+                createLike.setLikeCreatorSeq(likeCreatorSeq);
+                createLike.setContentType(contentType);
+                createLike.setContentSeq(contentSeq);
+                createLike.setContentProvider(contentProvider);
+                createLike = likemapper.changeLike(createLike);
+                if(createLike!=null){
+                    returnValue = true;
+                } else {
+                    returnValue = false;
+                }
+                break;
+            case 2:
+                LikeDTO deleteLike = new LikeDTO();
+                deleteLike.setLikeCreatorSeq(likeCreatorSeq);
+                deleteLike.setContentType(contentType);
+                deleteLike.setContentSeq(contentSeq);
+                deleteLike = likemapper.changeLike(deleteLike);
+                if(deleteLike==null){
+                    returnValue = true;
+                } else {
+                    returnValue = false;
+                }
+                break;
         }
-    }
-    public Boolean createCommentLikeSet(int likeCreatorSeq, CommentDTO comment){
-        LikeDTO like = new LikeDTO();
-        like.setLikeCreatorSeq(likeCreatorSeq);
-        like.setLikeType(2);
-        like.setContentSeq(comment.getCommentSeq());
-        like.setChangeType(1);
-        if(likemapper.insertLike(like)){
-            return true;
-        } else {
-            return false;
-        }
-    }
-    public Boolean deletePostLikeSet(int likeCreatorSeq, PostDTO post){
-        LikeDTO like = new LikeDTO();
-        like.setLikeCreatorSeq(likeCreatorSeq);
-        like.setLikeType(1);
-        like.setContentSeq(post.getPostSeq());
-        like.setChangeType(2);
-        if(likemapper.deleteLike(like)){
-            return true;
-        } else {
-            return false;
-        }
-    }
-    public Boolean deleteCommentLikeSet(int likeCreatorSeq, CommentDTO comment){
-        LikeDTO like = new LikeDTO();
-        like.setLikeCreatorSeq(likeCreatorSeq);
-        like.setLikeType(2);
-        like.setContentSeq(comment.getCommentSeq());
-        like.setChangeType(2);
-        if(likemapper.deleteLike(like)){
-            return true;
-        } else {
-            return false;
-        }
+        return returnValue;
     }
 }

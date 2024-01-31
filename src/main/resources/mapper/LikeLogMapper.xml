@@ -4,15 +4,16 @@
     <resultMap id="LikeDTO" type="com.laybysystem.domain.like.dto.LikeDTO">
         <id property="likeSeq" column="like_seq"/>
         <result property="likeCreatorSeq" column="like_creator_seq"/>
-        <result property="likeType" column="like_type"/>
+        <result property="contentType" column="content_type"/>
         <result property="contentSeq" column="content_seq"/>
-        <result property="changeType" column="p_change_type"/>
-        <result property="result" column="p_result"/>
+        <result property="contentProvider" column="content_provider"/>
     </resultMap>
-    <select id="insertLike" parameterType="com.laybysystem.domain.like.dto.LikeDTO" statementType="CALLABLE" resultType="java.lang.Boolean">
-        {call change_like_status( #{likeCreatorSeq, mode=IN, jdbcType=VARCHAR}, #{likeType, mode=IN, jdbcType=VARCHAR}, #{contentSeq, mode=IN, jdbcType=VARCHAR}, #{changeType, mode=IN, jdbcType=VARCHAR}, #{p_result, mode=OUT, jdbcType=INTEGER}) }
-    </select>
-    <select id="deleteLike" parameterType="com.laybysystem.domain.like.dto.LikeDTO" statementType="CALLABLE" resultType="java.lang.Boolean">
-        {call change_like_status( #{likeCreatorSeq, mode=IN, jdbcType=VARCHAR}, #{likeType, mode=IN, jdbcType=VARCHAR}, #{contentSeq, mode=IN, jdbcType=VARCHAR}, #{changeType, mode=IN, jdbcType=VARCHAR}, #{p_result, mode=OUT, jdbcType=INTEGER}) }
+    <select id="changeLike" parameterType="com.laybysystem.domain.like.dto.LikeDTO" resultMap="LikeDTO">
+        {call change_like_status(
+                #{likeCreatorSeq, mode=IN, jdbcType=INTEGER},
+                #{contentType, mode=IN, jdbcType=INTEGER},
+                #{contentSeq, mode=IN, jdbcType=INTEGER, jdbcType=INTEGER},
+                #{contentProvider, mode=IN, jdbcType=INTEGER, jdbcType=INTEGER}
+              )}
     </select>
 </mapper>

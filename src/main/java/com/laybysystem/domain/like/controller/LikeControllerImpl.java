@@ -25,23 +25,8 @@ public class LikeControllerImpl implements LikeController{
         if(user==null){
             return ResponseEntity.badRequest().body("토큰이 만료되었습니다. 다시 로그인해주세요.");
         } else {
-            if(likeService.createPostLikeSet(user.getUserSeq(),post)){
+            if(likeService.commonChangeLikeSet(user.getUserSeq(),1,post.getPostSeq(),post.getPostCreatorSeq(),1)){
                 return ResponseEntity.ok("게시글을 좋아합니다.");
-            } else {
-                return ResponseEntity.badRequest().body("좋아요에 실패하였습니다. 다시 시도해주세요.");
-            }
-        }
-    }
-
-    @Override
-    @PostMapping("/comment")
-    public ResponseEntity<String> createCommentLikeSet(@RequestParam String token, @RequestBody CommentDTO comment){
-        UserDTO user = jwtProvider.getUserInfo(token);
-        if(user==null){
-            return ResponseEntity.badRequest().body("토큰이 만료되었습니다. 다시 로그인해주세요.");
-        } else {
-            if(likeService.createCommentLikeSet(user.getUserSeq(),comment)){
-                return ResponseEntity.ok("댓글을 좋아합니다.");
             } else {
                 return ResponseEntity.badRequest().body("좋아요에 실패하였습니다. 다시 시도해주세요.");
             }
@@ -55,8 +40,8 @@ public class LikeControllerImpl implements LikeController{
         if(user==null){
             return ResponseEntity.badRequest().body("토큰이 만료되었습니다. 다시 로그인해주세요.");
         } else {
-            if(likeService.deletePostLikeSet(user.getUserSeq(),post)){
-                return ResponseEntity.ok("좋아요를 취소했습니다.");
+            if(likeService.commonChangeLikeSet(user.getUserSeq(),1, post.getPostSeq(), post.getPostCreatorSeq(),2)){
+                return ResponseEntity.ok("게시글좋아요를 취소했습니다.");
             } else {
                 return ResponseEntity.badRequest().body("좋아요취소에 실패하였습니다. 다시 시도해주세요.");
             }
@@ -64,14 +49,29 @@ public class LikeControllerImpl implements LikeController{
     }
 
     @Override
+    @PostMapping("/comment")
+    public ResponseEntity<String> createCommentLikeSet(@RequestParam String token, @RequestBody CommentDTO comment){
+        UserDTO user = jwtProvider.getUserInfo(token);
+        if(user==null){
+            return ResponseEntity.badRequest().body("토큰이 만료되었습니다. 다시 로그인해주세요.");
+        } else {
+            if(likeService.commonChangeLikeSet(user.getUserSeq(),2,comment.getCommentSeq(),comment.getCommentCreatorSeq(),1)){
+                return ResponseEntity.ok("댓글을 좋아합니다.");
+            } else {
+                return ResponseEntity.badRequest().body("좋아요에 실패하였습니다. 다시 시도해주세요.");
+            }
+        }
+    }
+    
+    @Override
     @DeleteMapping("/comment")
     public ResponseEntity<String> deleteCommentLikeSet(@RequestParam String token, @RequestBody CommentDTO comment){
         UserDTO user = jwtProvider.getUserInfo(token);
         if(user==null){
             return ResponseEntity.badRequest().body("토큰이 만료되었습니다. 다시 로그인해주세요.");
         } else {
-            if(likeService.deleteCommentLikeSet(user.getUserSeq(),comment)){
-                return ResponseEntity.ok("좋아요를 취소했습니다.");
+            if(likeService.commonChangeLikeSet(user.getUserSeq(),2,comment.getCommentSeq(), comment.getCommentCreatorSeq(),2)){
+                return ResponseEntity.ok("댓글좋아요를 취소했습니다.");
             } else {
                 return ResponseEntity.badRequest().body("좋아요취소에 실패하였습니다. 다시 시도해주세요.");
             }

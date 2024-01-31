@@ -5,6 +5,5 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface LikeMapper {
-    Boolean insertLike(LikeDTO like);
-    Boolean deleteLike(LikeDTO like);
+    LikeDTO changeLike(LikeDTO like);
 }
