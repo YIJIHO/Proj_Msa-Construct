@@ -1,5 +1,6 @@
 package com.laybysystem.domain.post.controller;
 
+import com.laybysystem.domain.news.service.NewsService;
 import com.laybysystem.domain.post.dto.PostDTO;
 import com.laybysystem.domain.post.service.PostService;
 import com.laybysystem.domain.user.dto.UserDTO;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class PostControllerImpl implements PostController{
     private final PostService postService;
     private final JwtProvider jwtProvider;
-
+    private final NewsService newsService;
     @Override
     @PostMapping
     public ResponseEntity<String> createPost(@RequestParam String postContent, @RequestParam String token) {
@@ -23,6 +24,7 @@ public class PostControllerImpl implements PostController{
             return ResponseEntity.badRequest().body("토큰이 만료되었습니다. 다시 로그인해주세요.");
         } else {
             if(postService.createPost(user.getUserSeq(),postContent)){
+                newsService.createNewsLog(user.getUserSeq(),0,0);
                 return ResponseEntity.ok("게시글이 작성되었습니다.");
             } else {
                 return ResponseEntity.badRequest().body("게시글 작성에 실패하였습니다. 다시 시도해주세요.");

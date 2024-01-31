@@ -2,6 +2,7 @@ package com.laybysystem.domain.follow.controller;
 
 import com.laybysystem.domain.follow.dto.FollowDTO;
 import com.laybysystem.domain.follow.service.FollowService;
+import com.laybysystem.domain.news.service.NewsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,12 +14,13 @@ import java.util.List;
 @RequestMapping("/follow")
 public class FollowControllerImpl implements FollowController{
     private final FollowService followService;
-
+    private final NewsService newsService;
     @Override
     @PostMapping
     public ResponseEntity<String> createFollowship(@RequestBody FollowDTO follow){
         if(followService.createFollowship(follow)){
-            return ResponseEntity.ok(follow.getFollowerUserSeq()+"님이 "+follow.getFollowingUserSeq()+"님을 팔로우하셨습니다.");
+            newsService.createNewsLog(follow.getFollowerUserSeq(),follow.getFollowingUserSeq(),4);
+            return ResponseEntity.ok("팔로우를 시작하셨습니다.");
         } else {
             return ResponseEntity.badRequest().body("팔로우에 실패하였습니다. 다시 시도해주세요.");
         }

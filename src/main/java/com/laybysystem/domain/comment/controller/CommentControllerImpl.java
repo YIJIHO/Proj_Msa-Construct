@@ -2,6 +2,7 @@ package com.laybysystem.domain.comment.controller;
 
 import com.laybysystem.domain.comment.dto.CommentDTO;
 import com.laybysystem.domain.comment.service.CommentService;
+import com.laybysystem.domain.news.service.NewsService;
 import com.laybysystem.domain.user.dto.UserDTO;
 import com.laybysystem.global.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.List;
 public class CommentControllerImpl implements CommentController{
     private final CommentService commentService;
     private final JwtProvider jwtProvider;
+    private final NewsService newsService;
 
     @Override
     @PostMapping
@@ -25,6 +27,7 @@ public class CommentControllerImpl implements CommentController{
             return ResponseEntity.badRequest().body("토큰이 만료되었습니다. 다시 로그인해주세요.");
         } else {
             if(commentService.createComment(comment,user.getUserSeq())){
+                newsService.createNewsLog(user.getUserSeq(),comment.getCommentCreatorSeq(),2);
                 return ResponseEntity.ok("댓글작성이 완료되었습니다.");
             } else {
                 return ResponseEntity.badRequest().body("댓글작성에 실패하였습니다. 다시 시도해주세요.");
