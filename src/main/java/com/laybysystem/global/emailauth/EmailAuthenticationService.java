@@ -12,9 +12,8 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class EmailAuthenticationService {
     private final JavaMailSender emailSender;
-    private String authNum; // 인증 번호
+    private String authNum;
 
-    // 인증번호 8자리 무작위 생성
     public void createCode() {
         Random random = new Random();
         StringBuffer key = new StringBuffer();
@@ -37,7 +36,7 @@ public class EmailAuthenticationService {
         authNum = key.toString();
     }
 
-    // 메일 양식 작성
+    // Mail Form
     public MimeMessage createEmailForm(String email) throws MessagingException, UnsupportedEncodingException {
         createCode();
         String setFrom = "yjh9099@gmail.com";
@@ -63,22 +62,18 @@ public class EmailAuthenticationService {
         msgOfEmail += "<br>";
         msgOfEmail += "</div>";
 
-
-
         message.setFrom(setFrom);
         message.setText(msgOfEmail, "utf-8", "html");
 
         return message;
     }
 
-    //실제 메일 전송
+    //Send Mail
     public String sendEmail(String email) throws MessagingException, UnsupportedEncodingException {
 
-        //메일전송에 필요한 정보 설정
         MimeMessage emailForm = createEmailForm(email);
-        //실제 메일 전송
         emailSender.send(emailForm);
 
-        return authNum; //인증 코드 반환
+        return authNum;
     }
 }

@@ -3,10 +3,7 @@ package com.laybysystem.domain.comment.service;
 import com.laybysystem.domain.comment.dto.CommentDTO;
 import com.laybysystem.domain.comment.mapper.CommentMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import javax.xml.stream.events.Comment;
 import java.util.List;
 
 @Service

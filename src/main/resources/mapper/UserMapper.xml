@@ -45,9 +45,9 @@
         UPDATE USER SET user_img  = #{userImg} WHERE user_seq = #{userSeq}
     </update>
     <update id="updateCommentByUser" parameterType="com.laybysystem.domain.user.dto.UserDTO">
-        UPDATE USER SET userComment  = #{userComment} WHERE user_email = #{userEmail}
+        UPDATE USER SET user_comment  = #{userComment} WHERE user_email = #{userEmail}
     </update>
     <delete id="deleteUserByUser" parameterType="com.laybysystem.domain.user.dto.UserDTO">
-        DELETE FROM USER WHERE userId = #{userId}
+        DELETE FROM USER WHERE user_email = #{userEmail}
     </delete>
 </mapper>

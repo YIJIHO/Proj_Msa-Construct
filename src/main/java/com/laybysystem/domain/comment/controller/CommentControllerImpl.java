@@ -6,6 +6,7 @@ import com.laybysystem.domain.news.service.NewsService;
 import com.laybysystem.domain.user.dto.UserDTO;
 import com.laybysystem.global.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +41,7 @@ public class CommentControllerImpl implements CommentController{
     public ResponseEntity<?> searchCommentList(@RequestParam int postSeq) {
         List<CommentDTO> commentList = commentService.searchCommentList(postSeq);
         if(commentList==null){
-            return ResponseEntity.badRequest().body("댓글이 없습니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("댓글이 없습니다.");
         } else {
             return ResponseEntity.ok(commentList);
         }
@@ -54,7 +55,7 @@ public class CommentControllerImpl implements CommentController{
             return ResponseEntity.badRequest().body("토큰이 만료되었습니다. 다시 로그인해주세요.");
         } else {
             if(commentService.modifyComment(comment,user.getUserSeq())){
-                return ResponseEntity.ok("댓글수정이 완료되었습니다. : "+comment.getCommentContent());
+                return ResponseEntity.ok("댓글수정이 완료되었습니다. : ");
             } else {
                 return ResponseEntity.badRequest().body("댓글수정에 실패하였습니다. 다시 시도해주세요.");
             }

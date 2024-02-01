@@ -6,6 +6,7 @@ import com.laybysystem.domain.news.mapper.NewsMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,8 +28,12 @@ public class NewsServiceImpl implements NewsService{
     }
 
     @Override
-    public List<NewsDTO> searchNewsfeed(int userSeq){
-        List<NewsDTO> newsFeed = newsMapper.selectNewsByUserSeq(userSeq);
+    public List<String> searchNewsfeed(int userSeq){
+        List<NewsDTO> outNewsLog = newsMapper.selectNewsByUserSeq(userSeq);
+        List<String> newsFeed = new ArrayList<>();
+        for (NewsDTO newsLog : outNewsLog) {
+            newsFeed.add(newsLog.getNewsLogMessage());
+        }
         return newsFeed;
     }
 }

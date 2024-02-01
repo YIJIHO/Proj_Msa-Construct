@@ -14,6 +14,6 @@
                 #{contentType, mode=IN, jdbcType=INTEGER},
                 #{contentSeq, mode=IN, jdbcType=INTEGER, jdbcType=INTEGER},
                 #{contentProvider, mode=IN, jdbcType=INTEGER, jdbcType=INTEGER}
-              )}
+              ) }
     </select>
 </mapper>

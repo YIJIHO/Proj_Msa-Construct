@@ -25,7 +25,6 @@ public class FollowServiceImpl implements FollowService{
     @Override
     public List<FollowDTO> searchFollowship(FollowDTO follow){
         List<FollowDTO> followList = followMapper.selectFollowshipByUserSeq(follow);
-        //List<Integer>로 가져와도 무방할듯하나 일단 DTO로 가져옴
         if(followList!=null){
             return followList;
         } else {

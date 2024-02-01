@@ -4,6 +4,7 @@ import com.laybysystem.domain.follow.dto.FollowDTO;
 import com.laybysystem.domain.follow.service.FollowService;
 import com.laybysystem.domain.news.service.NewsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +33,7 @@ public class FollowControllerImpl implements FollowController{
        if(followList!=null){
            return ResponseEntity.ok(followList);
        } else {
-           return ResponseEntity.badRequest().body("팔로우목록이 없습니다.");
+           return ResponseEntity.status(HttpStatus.NOT_FOUND).body("팔로우목록이 없습니다.");
        }
     }
     @Override

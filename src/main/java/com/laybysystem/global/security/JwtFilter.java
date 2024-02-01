@@ -44,7 +44,6 @@ public class JwtFilter extends BasicAuthenticationFilter {
         else {
             System.out.println("Valid JWT Not found " + requestURI);
         }
-
         // 생성한 필터 실행
         chain.doFilter(request,response);
     }

@@ -1,7 +1,6 @@
 package com.laybysystem.domain.like.controller;
 
 import com.laybysystem.domain.comment.dto.CommentDTO;
-import com.laybysystem.domain.like.dto.LikeDTO;
 import com.laybysystem.domain.like.service.LikeService;
 import com.laybysystem.domain.news.service.NewsService;
 import com.laybysystem.domain.post.dto.PostDTO;

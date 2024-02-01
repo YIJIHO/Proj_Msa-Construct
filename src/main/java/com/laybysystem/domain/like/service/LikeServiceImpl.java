@@ -13,8 +13,7 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public Boolean commonChangeLikeSet(int likeCreatorSeq,int contentType,int contentSeq,int contentProvider,int changeType){
         boolean returnValue = false;
-        //1: 생성타입, 2: 삭제타입
-        switch (changeType){
+        switch(changeType){
             case 1:
                 LikeDTO createLike = new LikeDTO();
                 createLike.setLikeCreatorSeq(likeCreatorSeq);

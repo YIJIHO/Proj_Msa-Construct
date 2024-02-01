@@ -1,6 +1,5 @@
 package com.laybysystem.domain.news.controller;
 
-import com.laybysystem.domain.news.dto.NewsDTO;
 import com.laybysystem.domain.news.service.NewsService;
 import com.laybysystem.domain.user.dto.UserDTO;
 import com.laybysystem.global.security.JwtProvider;
@@ -22,7 +21,7 @@ public class NewsControllerImpl implements NewsController{
     @GetMapping
     public ResponseEntity<?> searchNewsfeed(@RequestParam String token){
         UserDTO user = jwtProvider.getUserInfo(token);
-        List<NewsDTO> newsFeed = newsService.searchNewsfeed(user.getUserSeq());
+        List<String> newsFeed = newsService.searchNewsfeed(user.getUserSeq());
         if(newsFeed!=null){
             return ResponseEntity.ok(newsFeed);
         } else {

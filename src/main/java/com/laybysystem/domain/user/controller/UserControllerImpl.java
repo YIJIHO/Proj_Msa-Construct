@@ -59,11 +59,11 @@ public class UserControllerImpl implements UserController{
 
     @Override
     @PostMapping()
-    public ResponseEntity<String> createAccount(@RequestBody UserDTO user) {//*필수 : userName, userBirth, userId, userPw (관리자일 경우 userType = 0)
-        int createuser = userService.fillUser(user);
-        if(createuser==0){
+    public ResponseEntity<String> createAccount(@RequestBody UserDTO user) {
+        int createUser = userService.fillUser(user);
+        if(createUser==0){
             return ResponseEntity.badRequest().body("이메일 인증을 완료하지 않았습니다.");
-        } else if(createuser==1){
+        } else if(createUser==1){
             return ResponseEntity.badRequest().body("회원가입에 실패하였습니다. 다시 시도해주세요.");
         } else {
             return ResponseEntity.ok().body("회원가입이 완료되었습니다. 로그인해주세요.");
@@ -72,12 +72,10 @@ public class UserControllerImpl implements UserController{
 
     @Override
     @GetMapping("/login")
-    public ResponseEntity<String> logIn(@RequestBody UserDTO user) {//userId, userPw
-        //우선확인을 위해 boolean타입으로 처리
-        //UserDTO로 받아와서 JWT처리
+    public ResponseEntity<String> logIn(@RequestBody UserDTO user) {
         UserDTO loginUser = userService.selectUserBylogin(user);
         if(loginUser==null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("아이디 또는 비밀번호가 일치하지않습니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("아이디 또는 비밀번호가 일치하지 않습니다.");
         } else {
             String token = jwtProvider.createToken(loginUser);
             return ResponseEntity.ok().body("로그인 되었습니다."+token);

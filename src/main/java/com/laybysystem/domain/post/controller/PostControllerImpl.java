@@ -6,6 +6,7 @@ import com.laybysystem.domain.post.service.PostService;
 import com.laybysystem.domain.user.dto.UserDTO;
 import com.laybysystem.global.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,7 @@ public class PostControllerImpl implements PostController{
     public ResponseEntity<String> searchPost(@RequestParam int postSeq) {
         PostDTO post = postService.searchPost(postSeq);
         if(post==null){
-            return ResponseEntity.badRequest().body("게시글 찾을 수 없습니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("게시글 찾을 수 없습니다.");
         } else {
             return ResponseEntity.ok(post.getPostContent());
         }
