@@ -31,6 +31,4 @@ public class NewsServiceImpl implements NewsService{
         List<NewsDTO> newsFeed = newsMapper.selectNewsByUserSeq(userSeq);
         return newsFeed;
     }
-
-
 }

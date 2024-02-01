@@ -34,7 +34,7 @@ public class UserControllerImpl implements UserController{
     public ResponseEntity<String> emailAuth(@RequestParam String requestEmail) throws MessagingException, UnsupportedEncodingException {
         String authCode = emailAuthenticationService.sendEmail(requestEmail);
         if(authCode==null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("인증요청에 실패하였습니다. 다시 시도해주세요.");
+            return ResponseEntity.badRequest().body("인증요청에 실패하였습니다. 다시 시도해주세요.");
         } else {
             UserDTO user = new UserDTO();
             user.setUserEmail(requestEmail);
@@ -45,7 +45,7 @@ public class UserControllerImpl implements UserController{
     }
 
     @Override
-    @PostMapping("/email-auth-checking")
+    @PatchMapping("/email-auth-checking")
     public ResponseEntity<String> emailAuthChecking(@RequestParam String userEmail, @RequestParam String inputAuthenticationCode){
         UserDTO user = new UserDTO();
         user.setUserEmail(userEmail);
@@ -53,7 +53,7 @@ public class UserControllerImpl implements UserController{
         if(userService.checkUserAuth(user)){
             return ResponseEntity.ok().body("인증이 완료되었습니다.");
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("인증코드가 올바르지 않습니다.");
+            return ResponseEntity.badRequest().body("인증코드가 올바르지 않습니다.");
         }
     }
 
@@ -62,9 +62,9 @@ public class UserControllerImpl implements UserController{
     public ResponseEntity<String> createAccount(@RequestBody UserDTO user) {//*필수 : userName, userBirth, userId, userPw (관리자일 경우 userType = 0)
         int createuser = userService.fillUser(user);
         if(createuser==0){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("이메일 인증을 완료하지 않았습니다.");
+            return ResponseEntity.badRequest().body("이메일 인증을 완료하지 않았습니다.");
         } else if(createuser==1){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("회원가입에 실패하였습니다. 다시 시도해주세요.");
+            return ResponseEntity.badRequest().body("회원가입에 실패하였습니다. 다시 시도해주세요.");
         } else {
             return ResponseEntity.ok().body("회원가입이 완료되었습니다. 로그인해주세요.");
         }
@@ -118,13 +118,13 @@ public class UserControllerImpl implements UserController{
     public ResponseEntity<String> putUserImg(@RequestParam String token, @RequestBody MultipartFile file) throws IOException, FirebaseAuthException {
         UserDTO user = jwtProvider.getUserInfo(token);
         if(user==null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("토큰이 만료되었습니다. 다시 로그인해주세요.");
+            return ResponseEntity.badRequest().body("토큰이 만료되었습니다. 다시 로그인해주세요.");
         } else {
             user.setUserImg(fireBaseService.uploadFiles(file,String.valueOf(user.getUserSeq())));
             if(userService.setUserImage(user)){
                 return ResponseEntity.ok().body(user.getUserImg());
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("프로필이미지설정에 실패하였습니다. 다시 시도해주세요.");
+                return ResponseEntity.badRequest().body("프로필이미지설정에 실패하였습니다. 다시 시도해주세요.");
             }
         }
     }
@@ -134,13 +134,13 @@ public class UserControllerImpl implements UserController{
     public ResponseEntity<String> putUserComment(@RequestParam String token,@RequestParam String comment) {
         UserDTO user = jwtProvider.getUserInfo(token);
         if(user==null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("토큰이 만료되었습니다. 다시 로그인해주세요.");
+            return ResponseEntity.badRequest().body("토큰이 만료되었습니다. 다시 로그인해주세요.");
         } else {
             user.setUserComment(comment);
             if(userService.setUserComment(user)){
                 return ResponseEntity.ok().body("코멘트 설정이 완료되었습니다."+user.getUserSeq()+"/"+user.getUserEmail()+"/"+user.getUserComment());
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("코멘트설정에 실패하였습니다. 다시 시도해주세요.");
+                return ResponseEntity.badRequest().body("코멘트설정에 실패하였습니다. 다시 시도해주세요.");
             }
         }
     }
@@ -150,13 +150,13 @@ public class UserControllerImpl implements UserController{
     public ResponseEntity<String> deleteAccount(@RequestParam String token, @RequestParam String password) {//userId, userPw
         UserDTO user = jwtProvider.getUserInfo(token);
         if(user==null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("토큰이 만료되었습니다. 다시 로그인해주세요.");
+            return ResponseEntity.badRequest().body("토큰이 만료되었습니다. 다시 로그인해주세요.");
         } else {
             user.setUserPw(password);
             if(userService.deleteUserByUser(user)){
                 return ResponseEntity.ok().body("계정 삭제가 완료되었습니다.");
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("계정삭제에 실패하였습니다. 다시 시도해주세요.");
+                return ResponseEntity.badRequest().body("계정삭제에 실패하였습니다. 다시 시도해주세요.");
 
             }
          }
