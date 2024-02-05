@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh99.userservice.user.mapper.UserMapper">
+    <resultMap id="UserDTO" type="com.hh99.userservice.user.dto.UserDTO">
+        <id property="userSeq" column="user_seq"/>
+        <result property="userName" column="user_name"/>
+        <result property="userBirth" column="user_birth"/>
+        <result property="userEmail" column="user_email"/>
+        <result property="userPw" column="user_pw"/>
+        <result property="userAuthcode" column="user_authcode"/>
+        <result property="userImg" column="user_img"/>
+        <result property="userComment" column="user_comment"/>
+        <result property="userType" column="user_type"/>
+        <result property="userStatus" column="user_status"/>
+    </resultMap>
+    <insert id="insertUser" parameterType="com.hh99.userservice.user.dto.UserDTO">
+        {call put_auth_code( #{userEmail, mode=IN, jdbcType=VARCHAR}, #{userAuthcode, mode=IN, jdbcType=VARCHAR}) }
+    </insert>
+    <select id="selectAuthcodeByUser" parameterType="com.hh99.userservice.user.dto.UserDTO" resultType="int">
+        {call patch_user_status( #{userEmail, mode=IN, jdbcType=VARCHAR}, #{userAuthcode, mode=IN, jdbcType=VARCHAR}) }
+    </select>
+    <update id="updateUser" parameterType="com.hh99.userservice.user.dto.UserDTO">
+        {call fill_user_info(
+                #{userEmail, mode=IN, jdbcType=VARCHAR},
+                #{userName, mode=IN, jdbcType=VARCHAR},
+                #{userBirth, mode=IN, jdbcType=DATE},
+                #{userPw, mode=IN, jdbcType=VARCHAR},
+                #{userImg, mode=IN, jdbcType=VARCHAR},
+                #{userComment, mode=IN, jdbcType=VARCHAR}) }
+    </update>
+    <select id="selectUserBylogin" parameterType="com.hh99.userservice.user.dto.UserDTO" resultMap="UserDTO">
+        SELECT *
+        FROM USER
+        WHERE user_email = #{userEmail}
+    </select>
+    <select id="selectUserIdByUser" parameterType="com.hh99.userservice.user.dto.UserDTO" resultType="String">
+        SELECT user_email
+        FROM USER
+        WHERE user_name = #{userName} AND user_birth = #{userBirth}
+    </select>
+    <update id="updatePasswordByUser" parameterType="com.hh99.userservice.user.dto.UserDTO">
+        UPDATE USER SET user_pw = #{userPw} WHERE user_name = #{userName} AND user_email = #{userEmail}
+    </update>
+    <update id="updateImageByUser" parameterType="com.hh99.userservice.user.dto.UserDTO">
+        UPDATE USER SET user_img  = #{userImg} WHERE user_seq = #{userSeq}
+    </update>
+    <update id="updateCommentByUser" parameterType="com.hh99.userservice.user.dto.UserDTO">
+        UPDATE USER SET user_comment  = #{userComment} WHERE user_email = #{userEmail}
+    </update>
+    <delete id="deleteUserByUser" parameterType="com.hh99.userservice.user.dto.UserDTO">
+        DELETE FROM USER WHERE user_email = #{userEmail}
+    </delete>
+</mapper>
