@@ -1,8 +1,7 @@
-package com.laybysystem.domain.news.service;
+package com.hh99.newsfeedservice.news.service;
 
-
-import com.laybysystem.domain.news.dto.NewsDTO;
-import com.laybysystem.domain.news.mapper.NewsMapper;
+import com.hh99.newsfeedservice.news.dto.NewsDTO;
+import com.hh99.newsfeedservice.news.mapper.NewsMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

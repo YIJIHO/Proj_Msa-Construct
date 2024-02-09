@@ -1,4 +1,4 @@
-package com.laybysystem.domain.news.dto;
+package com.hh99.newsfeedservice.news.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

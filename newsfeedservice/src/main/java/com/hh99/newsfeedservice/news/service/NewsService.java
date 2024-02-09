@@ -1,4 +1,4 @@
-package com.laybysystem.domain.news.service;
+package com.hh99.newsfeedservice.news.service;
 
 import java.util.List;
 

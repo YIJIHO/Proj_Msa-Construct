@@ -22,30 +22,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
-    implementation "org.springframework.boot:spring-boot-starter-jdbc"
-    implementation 'org.projectlombok:lombok:1.18.22'
-    annotationProcessor 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    implementation 'mysql:mysql-connector-java:8.0.23'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
-    //emailAuthentication
-    implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.0'
-    implementation 'com.sun.mail:jakarta.mail:2.0.0'
-    //security
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.security:spring-security-core:6.0.0'
-    implementation 'org.springframework.security:spring-security-config:6.0.0'
-    implementation 'org.springframework.security:spring-security-web:6.0.0'
-    //jwt
-    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
-    implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
-    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
-    //firebasestorage
-    implementation group: 'com.google.firebase', name: 'firebase-admin', version: '8.1.0'
+
 }
 
 tasks.named('test') {

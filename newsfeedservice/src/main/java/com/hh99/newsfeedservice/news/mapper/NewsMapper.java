@@ -1,6 +1,7 @@
-package com.laybysystem.domain.news.mapper;
+package com.hh99.newsfeedservice.news.mapper;
 
-import com.laybysystem.domain.news.dto.NewsDTO;
+
+import com.hh99.newsfeedservice.news.dto.NewsDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

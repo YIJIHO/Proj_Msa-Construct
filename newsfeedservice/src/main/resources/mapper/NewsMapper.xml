@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.laybysystem.domain.news.mapper.NewsMapper">
-    <resultMap id="NewsDTO" type="com.laybysystem.domain.news.dto.NewsDTO">
+<mapper namespace="com.hh99.newsfeedservice.news.mapper.NewsMapper">
+    <resultMap id="NewsDTO" type="com.hh99.newsfeedservice.news.dto.NewsDTO">
         <id property="newsLogSeq" column="news_log_seq"/>
         <result property="newsLogCreator" column="news_log_creator"/>
         <result property="newsContentProvider" column="news_content_provider"/>
@@ -9,7 +9,7 @@
         <result property="newsLogType" column="news_log_type"/>
         <result property="newsLogCreateTime" column="news_log_creation_time"/>
     </resultMap>
-    <insert id="insertNewsLog" parameterType="com.laybysystem.domain.news.dto.NewsDTO">
+    <insert id="insertNewsLog" parameterType="com.hh99.newsfeedservice.news.dto.NewsDTO">
         {call create_news_log(#{newsLogCreator, mode=IN, jdbcType=INTEGER},#{newsContentProvider, mode=IN, jdbcType=INTEGER},#{newsLogType, mode=IN, jdbcType=INTEGER}) }
     </insert>
     <select id="selectNewsByUserSeq" parameterType="int" resultMap="NewsDTO">
