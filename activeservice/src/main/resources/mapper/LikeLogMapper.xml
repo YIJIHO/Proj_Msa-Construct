@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh99.activeservice.like.mapper.LikeMapper">
+    <resultMap id="LikeDTO" type="com.hh99.activeservice.like.dto.LikeDTO">
+        <id property="likeSeq" column="like_seq"/>
+        <result property="likeCreatorSeq" column="like_creator_seq"/>
+        <result property="contentType" column="content_type"/>
+        <result property="contentSeq" column="content_seq"/>
+        <result property="contentProvider" column="content_provider"/>
+    </resultMap>
+    <select id="changeLike" parameterType="com.hh99.activeservice.like.dto.LikeDTO" resultMap="LikeDTO">
+        {call change_like_status(
+                #{likeCreatorSeq, mode=IN, jdbcType=INTEGER},
+                #{contentType, mode=IN, jdbcType=INTEGER},
+                #{contentSeq, mode=IN, jdbcType=INTEGER, jdbcType=INTEGER},
+                #{contentProvider, mode=IN, jdbcType=INTEGER, jdbcType=INTEGER}
+              ) }
+    </select>
+</mapper>
