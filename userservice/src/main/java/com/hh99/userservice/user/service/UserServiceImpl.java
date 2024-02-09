@@ -60,14 +60,11 @@ public class UserServiceImpl implements UserService{
     }
     @Override
     public Boolean changePasswordByUser(UserDTO user){
-        System.out.println("진입2");
         user.setUserPw(passwordEncoder.encode(user.getUserPw()));
         int complete = userMapper.updatePasswordByUser(user);
         if(complete==1){
-            System.out.println("진입3");
             return true;
         } else {
-            System.out.println("진입4");
             return false;
         }
     }

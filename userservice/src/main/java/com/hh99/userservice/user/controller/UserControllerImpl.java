@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.Date;
 
+@CrossOrigin(origins = "http://localhost:8080", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
@@ -78,6 +79,17 @@ public class UserControllerImpl implements UserController{
             return ResponseEntity.ok().body("로그인 되었습니다."+token);
         }
     }
+    @GetMapping("/get-userseq")
+    public ResponseEntity<?> getUserSeq(@RequestParam String token){
+        System.out.println("진입2");
+        UserDTO user = jwtProvider.getUserInfo(token);
+        System.out.println("token에서 뽑은 seq : "+user.getUserSeq());
+        if(user==null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } else {
+            return ResponseEntity.ok().body(Integer.valueOf(user.getUserSeq()));
+        }
+    }
 
     @Override
     @GetMapping("/logout")
@@ -100,13 +112,10 @@ public class UserControllerImpl implements UserController{
     @Override
     @PatchMapping("/find-pw")
     public ResponseEntity<String> findPw(@RequestBody UserDTO user) {
-        System.out.println("진입1");
         boolean complete  = userService.changePasswordByUser(user);
         if(complete){
-            System.out.println("진입5");
             return ResponseEntity.ok().body("비밀번호 변경이 완료되었습니다.");
         } else {
-            System.out.println("진입6");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
         }
     }
