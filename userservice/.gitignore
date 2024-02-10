@@ -5,7 +5,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-.json
+serviceAccountKey.json
 
 ### STS ###
 .apt_generated
