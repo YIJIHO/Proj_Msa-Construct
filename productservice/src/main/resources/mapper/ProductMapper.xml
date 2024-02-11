@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh99.productservice.product.mapper.ProductMapper">
+    <resultMap id="ProductDTO" type="com.hh99.productservice.product.dto.ProductDTO">
+        <id property="productSeq" column="product_seq"/>
+        <result property="productName" column="product_name"/>
+        <result property="productPrice" column="product_price"/>
+        <result property="productDescription" column="product_description"/>
+        <result property="productType" column="product_type"/>
+        <result property="productStock" column="product_stock"/>
+        <result property="productSellingTime" column="product_selling_time"/>
+        <result property="productOpenStatus" column="product_open_status"/>
+    </resultMap>
+    <insert id="insertProduct" parameterType="com.hh99.productservice.product.dto.ProductDTO">
+        INSERT INTO PRODUCT VALUES (#{productSeq},#{productName},#{productPrice},#{productDescription},#{productType},#{productStock},#{productSellingTime},#{productOpenStatus})
+    </insert>
+    <select id="selectProductList" parameterType="int" resultMap="ProductDTO">
+        SELECT * FROM PRODUCT
+    </select>
+    <select id="selectProductDetail" parameterType="int" resultMap="ProductDTO">
+        SELECT * FROM PRODUCT WHERE product_seq = #{productSeq}
+    </select>
+    <delete id="deleteProduct" parameterType="int">
+        DELETE FROM PRODUCT WHERE product_seq = #{productSeq}
+    </delete>
+</mapper>
