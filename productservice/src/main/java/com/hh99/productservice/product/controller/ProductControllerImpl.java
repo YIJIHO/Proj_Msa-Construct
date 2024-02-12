@@ -2,6 +2,7 @@ package com.hh99.productservice.product.controller;
 
 import com.hh99.productservice.product.dto.ProductDTO;
 import com.hh99.productservice.product.service.ProductService;
+import com.hh99.productservice.product.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/product")
 public class ProductControllerImpl implements ProductController{
-    private ProductService productService;
+    private final ProductService productService;
+    private final RedisService redisService;
 
     @Override
     @PostMapping()
@@ -23,6 +25,9 @@ public class ProductControllerImpl implements ProductController{
         } else {
             return ResponseEntity.badRequest().body("상품등록에 실패하였습니다. 다시 시도해주세요.");
         }
+        //redis에 상품을 추가한다
+        // redisService.saveProduct(product);
+        // return ResponseEntity.ok().body("상품이 성공적으로 등록되었습니다.");
     }
 
     @Override
@@ -50,6 +55,9 @@ public class ProductControllerImpl implements ProductController{
     @Override
     @GetMapping("/stock")
     public ResponseEntity<?> searchProductStock(@RequestParam int productSeq){
+        //여기서는 redis를 통해 가져온다.
+//        ProductDTO product = redisService.getProduct(productSeq);
+//        return ResponseEntity.ok().body(product);
         ProductDTO product = productService.searchProductStock(productSeq);
         if(product!=null){
             return ResponseEntity.ok().body(product);
