@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService{
-    private ProductMapper productMapper;
+    private final ProductMapper productMapper;
 
     @Override
     public Boolean createProduct(ProductDTO product){
