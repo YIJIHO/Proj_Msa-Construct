@@ -3,6 +3,7 @@
 <mapper namespace="com.hh99.productservice.product.mapper.ProductMapper">
     <resultMap id="ProductDTO" type="com.hh99.productservice.product.dto.ProductDTO">
         <id property="productSeq" column="product_seq"/>
+        <result property="productCode" column="product_code"/>
         <result property="productName" column="product_name"/>
         <result property="productPrice" column="product_price"/>
         <result property="productDescription" column="product_description"/>
@@ -12,15 +13,16 @@
         <result property="productOpenStatus" column="product_open_status"/>
     </resultMap>
     <insert id="insertProduct" parameterType="com.hh99.productservice.product.dto.ProductDTO">
-        INSERT INTO PRODUCT VALUES (#{productSeq},#{productName},#{productPrice},#{productDescription},#{productType},#{productStock},#{productSellingTime},#{productOpenStatus})
+        INSERT INTO PRODUCT(product_code,product_name,product_price,product_description,product_type,product_stock,product_selling_time)
+        VALUES (#{productCode},#{productName},#{productPrice},#{productDescription},#{productType},#{productStock},#{productSellingTime})
     </insert>
     <select id="selectProductList" parameterType="int" resultMap="ProductDTO">
         SELECT * FROM PRODUCT
     </select>
     <select id="selectProductDetail" parameterType="int" resultMap="ProductDTO">
-        SELECT * FROM PRODUCT WHERE product_seq = #{productSeq}
+        SELECT * FROM PRODUCT WHERE product_code = #{productCode}
     </select>
     <delete id="deleteProduct" parameterType="int">
-        DELETE FROM PRODUCT WHERE product_seq = #{productSeq}
+        DELETE FROM PRODUCT WHERE product_code = #{productCode}
     </delete>
 </mapper>

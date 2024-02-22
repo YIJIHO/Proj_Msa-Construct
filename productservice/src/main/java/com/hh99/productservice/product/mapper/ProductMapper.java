@@ -9,7 +9,7 @@ import java.util.List;
 public interface ProductMapper {
     int insertProduct(ProductDTO product);
     List<ProductDTO> selectProductList();
-    ProductDTO selectProductDetail(int productSeq);
-    ProductDTO selectProductStock(int productSeq);
-    int deleteProduct(int productSeq);
+    ProductDTO selectProductDetail(int productCode);
+    ProductDTO selectProductStock(int productCode);
+    int deleteProduct(int productCode);
 }

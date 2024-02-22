@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 @Builder
 public class ProductDTO {
     private int productSeq;
+    private int productCode;
     private String productName;
     private String productPrice;
     private String productDescription;

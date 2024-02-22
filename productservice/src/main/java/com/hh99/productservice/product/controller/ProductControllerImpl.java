@@ -21,13 +21,11 @@ public class ProductControllerImpl implements ProductController{
     @PostMapping()
     public ResponseEntity<String> createProduct(@RequestBody ProductDTO product){
         if(productService.createProduct(product)){
+            redisService.saveProduct(product);
             return ResponseEntity.ok().body("상품이 성공적으로 등록되었습니다.");
         } else {
             return ResponseEntity.badRequest().body("상품등록에 실패하였습니다. 다시 시도해주세요.");
         }
-        //redis에 상품을 추가한다
-        // redisService.saveProduct(product);
-        // return ResponseEntity.ok().body("상품이 성공적으로 등록되었습니다.");
     }
 
     @Override
@@ -43,8 +41,8 @@ public class ProductControllerImpl implements ProductController{
 
     @Override
     @GetMapping("/detail")
-    public ResponseEntity<?> searchProductDetail(@RequestParam int productSeq){
-        ProductDTO product = productService.searchProductDetail(productSeq);
+    public ResponseEntity<?> searchProductDetail(@RequestParam int productCode){
+        ProductDTO product = productService.searchProductDetail(productCode);
         if(product!=null){
             return ResponseEntity.ok().body(product);
         } else {
@@ -54,22 +52,25 @@ public class ProductControllerImpl implements ProductController{
 
     @Override
     @GetMapping("/stock")
-    public ResponseEntity<?> searchProductStock(@RequestParam int productSeq){
-        //여기서는 redis를 통해 가져온다.
-//        ProductDTO product = redisService.getProduct(productSeq);
-//        return ResponseEntity.ok().body(product);
-        ProductDTO product = productService.searchProductStock(productSeq);
-        if(product!=null){
-            return ResponseEntity.ok().body(product);
-        } else {
+    public ResponseEntity<?> searchProductStock(@RequestParam int productCode){
+        Integer productStock = redisService.getProduct(productCode);
+        if(productStock==null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 상품을 찾을 수 없습니다.");
+        } else if (productStock==0) {
+            return ResponseEntity.ok().body("해당 상품의 재고가 없습니다.");
+        } else {
+            ProductDTO product = new ProductDTO();
+            product.setProductSeq(productCode);
+            product.setProductStock(productStock);
+            return ResponseEntity.ok().body(product);
         }
     }
 
     @Override
     @DeleteMapping()
-    public ResponseEntity<String> deleteProduct(@RequestParam int productSeq){
-        if(productService.deleteProduct(productSeq)){
+    public ResponseEntity<String> deleteProduct(@RequestParam int productCode){
+        if(productService.deleteProduct(productCode)){
+            redisService.deleteProduct(productCode);
             return ResponseEntity.ok().body("상품이 삭제되었습니다.");
         } else {
             return ResponseEntity.badRequest().body("상품 삭제에 실패하였습니다. 다시 시도해주세요.");

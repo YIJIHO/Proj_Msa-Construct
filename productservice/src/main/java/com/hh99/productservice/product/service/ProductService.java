@@ -7,7 +7,7 @@ import java.util.List;
 public interface ProductService {
     Boolean createProduct(ProductDTO product);
     List<ProductDTO> searchProductList();
-    ProductDTO searchProductDetail(int productSeq);
-    ProductDTO searchProductStock(int productSeq);
-    Boolean deleteProduct(int productSeq);
+    ProductDTO searchProductDetail(int productCode);
+    ProductDTO searchProductStock(int productCode);
+    Boolean deleteProduct(int productCode);
 }

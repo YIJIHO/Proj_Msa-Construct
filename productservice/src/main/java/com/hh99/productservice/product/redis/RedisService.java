@@ -1,7 +1,9 @@
 package com.hh99.productservice.product.redis;
 
 import com.hh99.productservice.product.dto.ProductDTO;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -9,14 +11,17 @@ import org.springframework.stereotype.Service;
 public class RedisService {
 
     @Autowired
-    private RedisTemplate<Integer, Object> redisTemplate;
+    private HashOperations<String, Integer, Integer> hashOperations;
 
     public void saveProduct(ProductDTO product) {
-        redisTemplate.opsForValue().set(product.getProductSeq(), product);
+        hashOperations.put("product",product.getProductCode(), product.getProductStock());
     }
 
-    public ProductDTO getProduct(Integer productSeq) {
-        return (ProductDTO) redisTemplate.opsForValue().get(productSeq);
+    public Integer getProduct(Integer productSeq) {
+        return hashOperations.get("product",productSeq);
     }
 
+    public void deleteProduct(Integer productSeq) {
+        hashOperations.delete("product",productSeq);
+    }
 }

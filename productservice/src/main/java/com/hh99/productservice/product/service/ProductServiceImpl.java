@@ -30,8 +30,8 @@ public class ProductServiceImpl implements ProductService{
         }
     }
     @Override
-    public ProductDTO searchProductDetail(int productSeq){
-        ProductDTO product = productMapper.selectProductDetail(productSeq);
+    public ProductDTO searchProductDetail(int productCode){
+        ProductDTO product = productMapper.selectProductDetail(productCode);
         if(product!=null){
             return product;
         } else {
@@ -39,8 +39,8 @@ public class ProductServiceImpl implements ProductService{
         }
     }
     @Override
-    public ProductDTO searchProductStock(int productSeq){
-        ProductDTO product = productMapper.selectProductStock(productSeq);
+    public ProductDTO searchProductStock(int productCode){
+        ProductDTO product = productMapper.selectProductStock(productCode);
         if(product!=null){
             return product;
         } else {
@@ -48,8 +48,8 @@ public class ProductServiceImpl implements ProductService{
         }
     }
     @Override
-    public Boolean deleteProduct(int productSeq){
-        if(productMapper.deleteProduct(productSeq)==1){
+    public Boolean deleteProduct(int productCode){
+        if(productMapper.deleteProduct(productCode)==1){
             return true;
         } else {
             return false;
