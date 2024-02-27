@@ -17,11 +17,11 @@ public class RedisService {
         hashOperations.put("product",product.getProductCode(), product.getProductStock());
     }
 
-    public Integer getProduct(Integer productSeq) {
-        return hashOperations.get("product",productSeq);
+    public Integer getProduct(Integer productCode) {
+        return hashOperations.get("product",productCode);
     }
 
-    public void deleteProduct(Integer productSeq) {
-        hashOperations.delete("product",productSeq);
+    public void deleteProduct(Integer productCode) {
+        hashOperations.delete("product",productCode);
     }
 }

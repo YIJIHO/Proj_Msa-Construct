@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh99.orderservice.order.mapper.OrderMapper">
+    <resultMap id="OrderDTO" type="com.hh99.orderservice.order.dto.OrderDTO">
+        <id property="orderSeq" column="order_seq"/>
+        <result property="orderCode" column="order_code"/>
+        <result property="orderUserSeq" column="order_user_seq"/>
+        <result property="orderProductCode" column="order_product_code"/>
+        <result property="orderStock" column="order_stock"/>
+        <result property="orderDate" column="order_date"/>
+        <result property="orderStatus" column="order_status"/>
+    </resultMap>
+    <insert id="insertOrder" parameterType="com.hh99.orderservice.order.dto.OrderDTO">
+        INSERT INTO USER_ORDER (order_code,order_user_seq,order_product_code,order_stock)
+        VALUES (#{orderCode},#{orderUserSeq},#{orderProductCode},#{orderStock})
+    </insert>
+    <delete id="deleteOrder" parameterType="com.hh99.orderservice.order.dto.OrderDTO">
+        DELETE FROM USER_ORDER WHERE order_code = #{orderCode}
+    </delete>
+</mapper>
