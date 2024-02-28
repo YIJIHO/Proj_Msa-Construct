@@ -10,41 +10,36 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class ApiRequestService {
-
     public Integer getUserSeq(String token){
         RestTemplate restTemplate = new RestTemplate();
-        String url = UriComponentsBuilder.fromHttpUrl("http://localhost:8080")
+        String url = UriComponentsBuilder.fromHttpUrl("http://userservice:8081")
                 .path("/user/get-userseq")
                 .queryParam("token", token)
                 .toUriString();
 
-        ResponseEntity<Integer> responseEntity = restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                new HttpEntity<>(null, new HttpHeaders()),
-                Integer.class
-        );
-
-        return responseEntity.getBody();
+        return restTemplate.getForObject(url,Integer.class);
     }
 
     public Boolean changeProductStock(Integer productCode,Integer productStock,boolean changeStatus){
         RestTemplate restTemplate = new RestTemplate();
-        String url = UriComponentsBuilder.fromHttpUrl("http://localhost:8086")
-                .path("/manage-stock")
+        String url = UriComponentsBuilder.fromHttpUrl("http://managingstockservice:8086")
+                .path("/manage-stock/change")
                 .queryParam("productCode", productCode)
                 .queryParam("productStock", productStock)
                 .queryParam("changeStatus", changeStatus)
                 .toUriString();
 
-        ResponseEntity<Boolean> responseEntity = restTemplate.exchange(
-                url,
-                HttpMethod.PUT,
-                new HttpEntity<>(null, new HttpHeaders()),
-                Boolean.class
-        );
+//        ResponseEntity<Boolean> responseEntity = restTemplate.exchange(
+//                url,
+//                HttpMethod.PUT,
+//                new HttpEntity<>(null, new HttpHeaders()),
+//                Boolean.class
+//        );
+//
+//        return responseEntity.getBody();
 
-        return responseEntity.getBody();
+        return restTemplate.postForObject(url,null,Boolean.class);
+
     }
 
 }

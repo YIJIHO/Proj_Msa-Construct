@@ -80,7 +80,7 @@ public class UserControllerImpl implements UserController{
         }
     }
     @GetMapping("/get-userseq")
-    public ResponseEntity<?> getUserSeq(@RequestParam String token){
+    public ResponseEntity<Integer> getUserSeq(@RequestParam String token){
         System.out.println("진입2");
         UserDTO user = jwtProvider.getUserInfo(token);
         System.out.println("token에서 뽑은 seq : "+user.getUserSeq());

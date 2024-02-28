@@ -13,52 +13,56 @@ public class ApiRequestService {
 
     public Boolean setProductStock(Integer productCode,Integer productStock){
         RestTemplate restTemplate = new RestTemplate();
-        String url = UriComponentsBuilder.fromHttpUrl("http://localhost:8086")
+        String url = UriComponentsBuilder.fromHttpUrl("http://managingstockservice:8086")
                 .path("/manage-stock")
                 .queryParam("productCode", productCode)
                 .queryParam("productStock", productStock)
                 .toUriString();
-
-        ResponseEntity<Boolean> responseEntity = restTemplate.exchange(
-                url,
-                HttpMethod.POST,
-                new HttpEntity<>(null, new HttpHeaders()),
-                Boolean.class
-        );
-
-        return responseEntity.getBody();
+        String check = restTemplate.postForObject(url,null,String.class);
+        if(check.equals("상품이 성공적으로 등록되었습니다.")){
+            return true;
+        } else{
+            return false;
+        }
+//        ResponseEntity<Boolean> responseEntity = restTemplate.exchange(
+//                url,
+//                HttpMethod.POST,
+//                new HttpEntity<>(null, new HttpHeaders()),
+//                Boolean.class
+//        );
+//
+//        return responseEntity.getBody();
     }
 
     public Integer getProductStock(Integer productCode){
         RestTemplate restTemplate = new RestTemplate();
-        String url = UriComponentsBuilder.fromHttpUrl("http://localhost:8080")
+        String url = UriComponentsBuilder.fromHttpUrl("http://managingstockservice:8086")
                 .path("/manage-stock")
                 .queryParam("productCode", productCode)
                 .toUriString();
 
-        ResponseEntity<Integer> responseEntity = restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                new HttpEntity<>(null, new HttpHeaders()),
-                Integer.class
-        );
+        return restTemplate.getForObject(url,Integer.class);
 
-        return responseEntity.getBody();
+//        ResponseEntity<Integer> responseEntity = restTemplate.getForEntity(url,Integer.class);
+//
+//        return responseEntity.getBody();
     }
     public Boolean deleteProductStock(Integer productCode){
         RestTemplate restTemplate = new RestTemplate();
-        String url = UriComponentsBuilder.fromHttpUrl("http://localhost:8086")
+        String url = UriComponentsBuilder.fromHttpUrl("http://managingstockservice:8086")
                 .path("/manage-stock")
                 .queryParam("productCode", productCode)
                 .toUriString();
 
-        ResponseEntity<Boolean> responseEntity = restTemplate.exchange(
-                url,
-                HttpMethod.DELETE,
-                new HttpEntity<>(null, new HttpHeaders()),
-                Boolean.class
-        );
-
-        return responseEntity.getBody();
+        restTemplate.delete(url);
+        return true;
+//        ResponseEntity<Boolean> responseEntity = restTemplate.exchange(
+//                url,
+//                HttpMethod.DELETE,
+//                new HttpEntity<>(null, new HttpHeaders()),
+//                Boolean.class
+//        );
+//
+//        return responseEntity.getBody();
     }
 }

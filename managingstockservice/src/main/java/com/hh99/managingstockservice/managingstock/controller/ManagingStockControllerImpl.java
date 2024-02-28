@@ -25,7 +25,7 @@ public class ManagingStockControllerImpl implements ManaginStockController{
     }
 
     @Override
-    @PutMapping
+    @PostMapping("/change")
     public ResponseEntity<Boolean> changeProductStock(@RequestParam Integer productCode,@RequestParam Integer productStock,@RequestParam boolean changeStatus){
         return ResponseEntity.ok().body(redisService.changeStock(productCode,productStock,changeStatus));
     }
