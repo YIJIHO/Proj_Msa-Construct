@@ -23,13 +23,15 @@ public class OrderControllerImpl implements OrderController{
     public ResponseEntity<?> createOrder(@RequestParam String token,@RequestBody OrderDTO order){
         int orderUserSeq = apiRequestService.getUserSeq(token);
         order.setOrderUserSeq(orderUserSeq);
-        order = redisService.createOrder(order);
-        if(order!=null){
+        if(apiRequestService.changeProductStock(order.getOrderProductCode(),order.getOrderStock(),true)){
+            order = redisService.createOrder(order);
+            orderService.createOrder(order);
             return ResponseEntity.ok().body(order);
         } else {
             return ResponseEntity.badRequest().body("해당 상품의 재고가 없거나 구매수량이 상품의 재고보다 많습니다.");
         }
     }
+
     //결제완료
     @Override
     @PostMapping("/purchase-order")
@@ -52,8 +54,12 @@ public class OrderControllerImpl implements OrderController{
     public ResponseEntity<String> cancelOrderBeforePurchase(@RequestParam String orderCode){
         OrderDTO order = redisService.getOrder(orderCode);
         if(order!=null){
-            redisService.deleteOrder(orderCode);
-            return ResponseEntity.ok().body("진행 중인 주문을 취소하셨습니다.");
+            if(apiRequestService.changeProductStock(order.getOrderProductCode(),order.getOrderStock(),false)){
+                redisService.deleteOrder(orderCode);
+                return ResponseEntity.ok().body("진행 중인 주문을 취소하셨습니다.");
+            } else {
+                return ResponseEntity.ok().body("주문 취소에 실패하였습니다. 다시 시도해 주세요");
+            }
         } else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("주문내역이 없습니다.");
         }
@@ -64,7 +70,8 @@ public class OrderControllerImpl implements OrderController{
     public ResponseEntity<String> cancelOrderAfterPurchase(@RequestParam String orderCode){
         OrderDTO order = redisService.getOrder(orderCode);
         if(order!=null){
-            if(orderService.deleteOrder(order)){
+            if(apiRequestService.changeProductStock(order.getOrderProductCode(),order.getOrderStock(),false)){
+                orderService.deleteOrder(order);
                 redisService.deleteOrder(orderCode);
                 return ResponseEntity.ok().body("주문을 취소하셨습니다.");
             } else {

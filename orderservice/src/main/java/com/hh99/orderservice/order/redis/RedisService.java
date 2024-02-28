@@ -22,19 +22,13 @@ public class RedisService {
     private HashOperations<String, Integer, Integer> productHashTemplate;
 
     public OrderDTO createOrder(OrderDTO order){
-        Integer currStock = getStock(order.getOrderProductCode());
-        if(currStock!=null){
             String dateForKey = LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd"));
             String key = dateForKey+order.getOrderUserSeq()+order.getOrderProductCode();
             String secretkey = String.valueOf(new Random(key.hashCode()).nextLong());
 
             order.setOrderCode(secretkey);
-            productHashTemplate.put("product",order.getOrderProductCode(),currStock-order.getOrderStock());
             orderHashTemplate.put("order",order.getOrderCode(),order);
             return order;
-        } else {
-            return null;
-        }
     }
 
     public OrderDTO getOrder(String orderCode){
@@ -50,29 +44,5 @@ public class RedisService {
     public void deleteOrder(String orderCode) {
         OrderDTO order = getOrder(orderCode);
         orderHashTemplate.delete("order",orderCode);
-        Integer currStock = getStock(order.getOrderProductCode());
-        if(currStock!=null){
-            productHashTemplate.put("product",order.getOrderProductCode(),currStock+order.getOrderStock());
-        }
     }
-
-//    public boolean changeProductStock(OrderDTO order, boolean changeStatus){
-//        Integer currStock = getStock(order.getOrderProductCode());
-//        if(changeStatus){
-//            if(currStock==null || currStock==0){
-//                return false;
-//            } else {
-//                productHashTemplate.put("product",order.getOrderProductCode(),currStock-order.getOrderStock());
-//                return true;
-//            }
-//        } else {
-//            productHashTemplate.put("product",order.getOrderProductCode(),currStock+order.getOrderStock());
-//            return true;
-//        }
-//    }
-
-    public Integer getStock(Integer productCode){
-        return productHashTemplate.get("product",productCode);
-    }
-
 }
