@@ -32,8 +32,7 @@ public class ManagingStockControllerImpl implements ManaginStockController{
 
     @Override
     @DeleteMapping
-    public ResponseEntity<?> deleteProductStock(@RequestParam Integer productCode){
-        redisService.deleteProduct(productCode);
-        return ResponseEntity.ok().body("삭제완료");
+    public ResponseEntity<Boolean> deleteProductStock(@RequestParam Integer productCode){
+        return ResponseEntity.ok().body(redisService.deleteProduct(productCode));
     }
 }

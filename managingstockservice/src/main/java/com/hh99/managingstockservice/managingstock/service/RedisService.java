@@ -51,8 +51,12 @@ public class RedisService {
         }
     }
 
-    public void deleteProduct(Integer productCode) {
+    public Boolean deleteProduct(Integer productCode) {
         productHashTemplate.delete("product",productCode);
+        if(productHashTemplate.get("product",productCode)==null) {
+            return true;
+        } else {
+            return false;
+        }
     }
-
 }
