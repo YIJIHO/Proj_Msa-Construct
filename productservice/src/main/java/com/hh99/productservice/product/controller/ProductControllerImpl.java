@@ -1,8 +1,8 @@
 package com.hh99.productservice.product.controller;
 
 import com.hh99.productservice.product.dto.ProductDTO;
+import com.hh99.productservice.product.global.ApiRequestService;
 import com.hh99.productservice.product.service.ProductService;
-import com.hh99.productservice.product.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +15,13 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductControllerImpl implements ProductController{
     private final ProductService productService;
-    private final RedisService redisService;
+    private final ApiRequestService apiRequestService;
 
     @Override
     @PostMapping()
     public ResponseEntity<String> createProduct(@RequestBody ProductDTO product){
         if(productService.createProduct(product)){
-            redisService.saveProduct(product);
+            apiRequestService.setProductStock(product.getProductCode(),product.getProductStock());
             return ResponseEntity.ok().body("상품이 성공적으로 등록되었습니다.");
         } else {
             return ResponseEntity.badRequest().body("상품등록에 실패하였습니다. 다시 시도해주세요.");
@@ -53,7 +53,7 @@ public class ProductControllerImpl implements ProductController{
     @Override
     @GetMapping("/stock")
     public ResponseEntity<?> searchProductStock(@RequestParam int productCode){
-        Integer productStock = redisService.getProduct(productCode);
+        Integer productStock = apiRequestService.getProductStock(productCode);
         if(productStock==null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 상품을 찾을 수 없습니다.");
         } else if (productStock==0) {
@@ -70,7 +70,7 @@ public class ProductControllerImpl implements ProductController{
     @DeleteMapping()
     public ResponseEntity<String> deleteProduct(@RequestParam int productCode){
         if(productService.deleteProduct(productCode)){
-            redisService.deleteProduct(productCode);
+            apiRequestService.deleteProductStock(productCode);
             return ResponseEntity.ok().body("상품이 삭제되었습니다.");
         } else {
             return ResponseEntity.badRequest().body("상품 삭제에 실패하였습니다. 다시 시도해주세요.");
