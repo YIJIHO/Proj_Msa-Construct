@@ -55,6 +55,9 @@ docker-compose start
 //docker컨테이너 정지 (기존 인스턴스 정지)
 docker-compose stop
 
+//docker network 생성
+docker network create {네트워크이름}
+
 //docker network 확인
 docker network inspect {네트워크이름}
 
