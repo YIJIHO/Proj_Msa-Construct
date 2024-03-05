@@ -1,11 +1,11 @@
 ## 예약구매시스템  -   수정중
 
-### 1. 프로젝트 개요
+### 1. About The Project
 ```plaintext
-일정 시간에 오픈되는 상품을 판매하는 서비스의 서버개발
+일정 시간에 오픈되는 상품을 판매하는 서비스의 서버개발 / 1인 4주
 ```
 
-### 2. 요구사항 및 스펙
+### 2. Requirements & Specification 
 ```plaintext
 [요구사항]
  1. 사용자의 회원가입 시 외부 이메일 인증을 거쳐야한다.
@@ -17,6 +17,11 @@
  * Database : MySql 8.0, Redis 7.2.4
  * Infra : Docker
  * Tools : Github, IntelliJ
+![HTML5](https://img.shields.io/badge/-HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/-CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/-JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=white)
+![Git](https://img.shields.io/badge/-Git-F05032?style=for-the-badge&logo=git&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/-SpringBoot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
 ```
 
 ### 3. ERD
