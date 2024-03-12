@@ -39,7 +39,7 @@ Lay-By-System
  └-->Managing-StockModule
 ```
 ### 6. API Documentation
-
+//개별 블로그에 첨부
 
 ### 7. Command
 ```plaintext
