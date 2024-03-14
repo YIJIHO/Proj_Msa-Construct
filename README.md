@@ -1,16 +1,14 @@
 ## Lay-By-System
 
 ### 1. About The Project
-```plaintext
- 소셜 미디어 기반으로 예약구매 서비스의 서버개발 / 1인 4주
-```
+  - 소셜 미디어 기반으로 예약구매 서비스의 서버개발 / 1인 4주
+
 ### 2. Requirements
-```plaintext
- 1. 사용자의 회원가입 시 외부 이메일 인증을 거쳐야한다.
- 2. 상품의 오픈시간을 통해 조회를 제어하도록한다.
- 3. 실제 결제는 진행하지 않으나 수량은 엄격하게 제어하도록 한다.(주문수량은 n개일 수 있다. 상품재고수량 >= n 이어야만 주문이 생성되도록 한다.) 
- 4. 동시에 대량의 요청을 처리할 수 있도록 한다. 이때, 요청은 상품수량의 2배이며 3번 요구사항에 따라 에러를 제어할 수 있게 한다.
-```
+  1. 사용자의 회원가입 시 외부 이메일 인증을 거쳐야한다.
+  2. 상품의 오픈시간을 통해 조회를 제어하도록한다.
+  3. 실제 결제는 진행하지 않으나 수량은 엄격하게 제어하도록 한다.(주문수량은 n개일 수 있다. 상품재고수량 >= n 이어야만 주문이 생성되도록 한다.) 
+  4. 동시에 대량의 요청을 처리할 수 있도록 한다. 이때, 요청은 상품수량의 2배이며 3번 요구사항에 따라 에러를 제어할 수 있게 한다.
+
 ### 3. Specification
 ![Java](https://img.shields.io/badge/Java-9932cc?style=for-the-badge&logo=java&logoColor=white&labelColor=gray&label=17)
 ![Spring Boot](https://img.shields.io/badge/-SpringBoot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white&labelColor=gray&label=3.2.2)
