@@ -37,7 +37,7 @@ Lay-By-System
  └-->Managing-StockModule
 ```
 ### 6. API Documentation
-//개별 블로그에 첨부
+ * https://voracious-blinker-0ff.notion.site/Api-472d9b49ba3c46209b0f7878d80ab412?pvs=4
 
 ### 7. Command
 ```plaintext
